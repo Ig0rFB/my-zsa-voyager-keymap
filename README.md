@@ -35,3 +35,27 @@ Each time you run the GitHub Action, the workflow will:
 ## Oryx Chrome extension
 
 To make building even easier, [@nivekmai](https://github.com/nivekmai) created an [Oryx Chrome extension](https://chromewebstore.google.com/detail/oryx-extension/bocjciklgnhkejkdfilcikhjfbmbcjal) to be able to trigger the GitHub Actions from inside Oryx itself.
+
+## Custom QMK Configurations
+
+This section documents all custom QMK features and modifications applied to this keymap beyond what's configured in Oryx.
+
+### Key Overrides
+
+- **Shift + Backspace → Delete**: Holding Shift and pressing Backspace sends Delete instead of regular backspace.
+  - Configured in `keymap.c` using `ko_make_basic()`.
+  - **Fix applied**: Changed `key_overrides` declaration from `const key_override_t **key_overrides` to `const key_override_t *key_overrides[]` to fix compilation errors with `ARRAY_SIZE()` macro.
+
+### Combos
+
+- **Combo 0**: Pressing `KC_4`, `KC_5`, `KC_6`, `KC_7` simultaneously triggers `LGUI(LCTL(KC_Q))` (Mac: Cmd+Ctrl+Q).
+- **Combo 1**: Pressing `KC_I`, `KC_O` simultaneously triggers `KC_LBRC` (left bracket `[`).
+- **Combo 2**: Pressing `KC_O`, `KC_P` simultaneously triggers `KC_RBRC` (right bracket `]`).
+
+### Enabled Features
+
+The following QMK features are enabled in `rules.mk`:
+- `COMBO_ENABLE = yes` - Enables key combo functionality
+- `KEY_OVERRIDE_ENABLE = yes` - Enables key override functionality
+- `ORYX_ENABLE = yes` - Enables Oryx integration
+- `RGB_MATRIX_CUSTOM_KB = yes` - Enables custom RGB matrix handling
