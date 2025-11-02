@@ -5,3 +5,8 @@ ORYX_ENABLE = yes
 RGB_MATRIX_CUSTOM_KB = yes
 SPACE_CADET_ENABLE = no
 COMBO_ENABLE = yes
+
+
+
+#Custom QMK feature
+KEY_OVERRIDE_ENABLE = yes
