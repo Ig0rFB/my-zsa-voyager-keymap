@@ -1,0 +1,7 @@
+#define KC_MAC_CUT LGUI(KC_X)
+#define KC_MAC_COPY LGUI(KC_C)
+#define KC_MAC_PASTE LGUI(KC_V)
+#define UK_LBRC KC_LBRC
+#define UK_RBRC KC_RBRC
+#define UK_LCBR S(KC_LBRC)
+#define UK_RCBR S(KC_RBRC)
