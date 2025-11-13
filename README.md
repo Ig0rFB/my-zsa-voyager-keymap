@@ -59,3 +59,13 @@ The following QMK features are enabled in `rules.mk`:
 - `KEY_OVERRIDE_ENABLE = yes` - Enables key override functionality
 - `ORYX_ENABLE = yes` - Enables Oryx integration
 - `RGB_MATRIX_CUSTOM_KB = yes` - Enables custom RGB matrix handling
+
+
+kjurSdfasdfasdfasdfa
+kjurSdfasdfasdfasdfa
+kjurSdfasdfaljjsdkjurSdfasdfasdfasdfa
+kjurSdfasdfasdfasdfa
+kjurSdfasdfasdfasdfa
+kjurSdfasdfasdfasdfa
+
+
