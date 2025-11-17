@@ -1,6 +1,5 @@
 #include QMK_KEYBOARD_H
 #include "version.h"
-#include "i18n.h"
 #define MOON_LED_LEVEL LED_LEVEL
 #ifndef ZSA_SAFE_RANGE
 #define ZSA_SAFE_RANGE SAFE_RANGE
@@ -38,13 +37,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, HSV_0_255_255,  HSV_74_255_255, HSV_169_255_255,                                KC_TRANSPARENT, LCTL(LSFT(KC_TAB)),LCTL(KC_TAB),   KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
                                                     KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT
   ),
-  [3] = LAYOUT_voyager(
-    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
-    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, UK_LBRC,        UK_RBRC,        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
-    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, UK_LCBR,        UK_RCBR,        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
-    KC_TRANSPARENT, KC_TRANSPARENT, KC_MAC_CUT,     KC_MAC_COPY,    KC_MAC_PASTE,   KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
-                                                    KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT
-  ),
 };
 
 const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM = LAYOUT(
@@ -65,6 +57,14 @@ combo_t key_combos[COMBO_COUNT] = {
     COMBO(combo2, KC_RBRC),
 };
 
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case MT(MOD_LSFT, KC_A):
+            return TAPPING_TERM -20;
+        default:
+            return TAPPING_TERM;
+    }
+}
 
 
 extern rgb_config_t rgb_matrix_config;
@@ -85,8 +85,6 @@ const uint8_t PROGMEM ledmap[][RGB_MATRIX_LED_COUNT][3] = {
     [1] = { {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93} },
 
     [2] = { {51,218,204}, {51,218,204}, {51,218,204}, {51,218,204}, {51,218,204}, {51,218,204}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,255,255}, {93,255,255}, {172,255,255}, {0,0,0}, {0,0,0}, {51,218,204}, {51,218,204}, {51,218,204}, {51,218,204}, {51,218,204}, {0,0,0}, {82,253,190}, {207,255,255}, {165,221,192}, {207,255,255}, {0,0,0}, {0,0,0}, {0,0,0}, {165,221,192}, {165,221,192}, {165,221,192}, {0,0,0}, {0,0,0}, {0,0,0}, {14,218,204}, {14,218,204}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0} },
-
-    [3] = { {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {187,185,102}, {187,185,102}, {187,185,102}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {187,185,102}, {187,185,102}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {187,185,102}, {187,185,102}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0} },
 
 };
 
@@ -120,9 +118,6 @@ bool rgb_matrix_indicators_user(void) {
         break;
       case 2:
         set_layer_color(2);
-        break;
-      case 3:
-        set_layer_color(3);
         break;
      default:
         if (rgb_matrix_get_flags() == LED_FLAG_NONE) {
