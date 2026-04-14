@@ -58,6 +58,9 @@ combo_t key_combos[COMBO_COUNT] = {
 };
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+    // Per-key tapping term tweaks for home-row mods.
+    // Kept intentionally minimal: global TAPPING_TERM is tuned for general typing,
+    // but some keys (like home-row Shift) benefit from a slightly larger window.
     switch (keycode) {
         case MT(MOD_LSFT, KC_A):
             return TAPPING_TERM + 5;
@@ -69,8 +72,14 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
   (void)record;
 
-  // Only the home-row Shift key should prioritise hold when interrupted, to keep
-  // thumb layer-taps (e.g. LT(2, KC_SPACE)) from activating layers too easily.
+  // Enable "Hold On Other Key Press" only for the home-row Shift key.
+  // This improves fast capitalisation (e.g. typing "Igor" quickly) by ensuring
+  // that when another key is pressed during the tap/hold window, the Shift hold
+  // action is chosen early enough to affect that keypress.
+  //
+  // We keep this scoped to MT(MOD_LSFT, KC_A) so thumb layer-taps (e.g.
+  // LT(2, KC_SPACE)) do not become overly eager to activate layers during fast
+  // rolling/overlap typing.
   return keycode == MT(MOD_LSFT, KC_A);
 }
 
