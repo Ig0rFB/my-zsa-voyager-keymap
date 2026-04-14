@@ -4,6 +4,10 @@
 
 #define PERMISSIVE_HOLD
 
+// Make HOLD_ON_OTHER_KEY_PRESS configurable per key (see get_hold_on_other_key_press in keymap.c).
+#define HOLD_ON_OTHER_KEY_PRESS
+#define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
+
 #undef RGB_MATRIX_TIMEOUT
 #define RGB_MATRIX_TIMEOUT 180000
 

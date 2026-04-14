@@ -66,6 +66,14 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     }
 }
 
+bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
+  (void)record;
+
+  // Only the home-row Shift key should prioritise hold when interrupted, to keep
+  // thumb layer-taps (e.g. LT(2, KC_SPACE)) from activating layers too easily.
+  return keycode == MT(MOD_LSFT, KC_A);
+}
+
 
 extern rgb_config_t rgb_matrix_config;
 
