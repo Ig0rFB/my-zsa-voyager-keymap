@@ -178,11 +178,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 
-// Custom QMK here
-const key_override_t delete_key_override = 
+// Key overrides must stay in this file (not a separate .c): QMK builds
+// quantum/keymap_introspection.c against the keymap translation unit and
+// expects key_overrides to be visible there—otherwise the firmware build fails.
+const key_override_t delete_key_override =
     ko_make_basic(MOD_MASK_SHIFT, KC_BSPC, KC_DEL);
 
 const key_override_t *key_overrides[] = {
-	&delete_key_override,
-	NULL
+    &delete_key_override,
+    NULL,
 };

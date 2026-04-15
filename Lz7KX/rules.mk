@@ -8,5 +8,5 @@ COMBO_ENABLE = yes
 
 
 
-#Custom QMK feature
+# Key overrides are defined in keymap.c (required for QMK introspection).
 KEY_OVERRIDE_ENABLE = yes

@@ -75,7 +75,9 @@ jobs:
         run: |
           git fetch origin main
           git checkout -B main origin/main
-          git merge -Xignore-all-space oryx
+          # Extra whitespace tolerance reduces spurious conflicts when Oryx and
+          # main only differ in blank lines around the same keymap regions.
+          git merge -Xignore-all-space -Xignore-space-change oryx
           git push
 
       - name: Update QMK firmware submodule to latest version (${{ steps.download-layout-source.outputs.firmware_version }})
