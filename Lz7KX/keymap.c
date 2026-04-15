@@ -55,12 +55,13 @@ combo_t key_combos[COMBO_COUNT] = {
 };
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-    // Per-key tapping term tweaks for home-row mods.
-    // Kept intentionally minimal: global TAPPING_TERM is tuned for general typing,
-    // but some keys (like home-row Shift) benefit from a slightly larger window.
+    // Home-row Shift on A needs a *longer* window than the global default so
+    // quick rolls (a + next letter) register as tap "a" instead of hold Shift.
+    // Use a positive offset only: TAPPING_TERM - N was making false Shift worse.
+    (void)record;
     switch (keycode) {
         case MT(MOD_LSFT, KC_A):
-            return TAPPING_TERM -5;
+            return TAPPING_TERM + 55;
         default:
             return TAPPING_TERM;
     }
@@ -69,15 +70,11 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
   (void)record;
 
-  // Enable "Hold On Other Key Press" only for the home-row Shift key.
-  // This improves fast capitalisation (e.g. typing "Igor" quickly) by ensuring
-  // that when another key is pressed during the tap/hold window, the Shift hold
-  // action is chosen early enough to affect that keypress.
-  //
-  // We keep this scoped to MT(MOD_LSFT, KC_A) so thumb layer-taps (e.g.
-  // LT(2, KC_SPACE)) do not become overly eager to activate layers during fast
-  // rolling/overlap typing.
-  return keycode == MT(MOD_LSFT, KC_A);
+  // When true for a mod-tap, pressing another key during the tap/hold window
+  // can force the *hold* path early (good for "Igor"-style caps, bad for fast
+  // "a" rolls). If you still drop "a" after the longer get_tapping_term above,
+  // return false here and rely on hold timing alone for capitals.
+  return false;
 }
 
 
