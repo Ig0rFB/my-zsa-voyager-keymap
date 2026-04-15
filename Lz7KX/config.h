@@ -1,6 +1,6 @@
 #define CHORDAL_HOLD
 #undef TAPPING_TERM
-#define TAPPING_TERM 175
+#define TAPPING_TERM 185
 
 #define PERMISSIVE_HOLD
 
@@ -15,7 +15,7 @@
 #define RGB_MATRIX_VAL_STEP 1
 
 #define USB_SUSPEND_WAKEUP_DELAY 0
-#define SERIAL_NUMBER "Lz7KX/7vDlXw"
+#define SERIAL_NUMBER "Lz7KX/AzqlNZ"
 #define LAYER_STATE_8BIT
 #define COMBO_COUNT 3
 
