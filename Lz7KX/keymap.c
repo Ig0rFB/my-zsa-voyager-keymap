@@ -61,7 +61,7 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     (void)record;
     switch (keycode) {
         case MT(MOD_LSFT, KC_A):
-            return TAPPING_TERM + 55;
+            return TAPPING_TERM + 15;
         default:
             return TAPPING_TERM;
     }
