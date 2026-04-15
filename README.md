@@ -60,5 +60,27 @@ The following QMK features are enabled in `rules.mk`:
 - `ORYX_ENABLE = yes` - Enables Oryx integration
 - `RGB_MATRIX_CUSTOM_KB = yes` - Enables custom RGB matrix handling
 
+## Addendum: Tapping term (global vs home-row Shift on `A`)
+
+Tap-hold timing is controlled in two places. `#define TAPPING_TERM_PER_KEY` in `Lz7KX/config.h` enables per-key overrides; the actual per-key values are returned from `get_tapping_term()` in `Lz7KX/keymap.c`.
+
+### Where to edit
+
+| What | File | Notes |
+|------|------|--------|
+| **Global** tapping term (milliseconds) | `Lz7KX/config.h` | `#define TAPPING_TERM …` — also set in Oryx; a successful **Fetch and build layout** workflow overwrites this from the latest export unless you resolve merges manually. |
+| **Shift-on-`A` only** (`MT(MOD_LSFT, KC_A)`) | `Lz7KX/keymap.c` | Inside `get_tapping_term()`, the `case MT(MOD_LSFT, KC_A):` branch returns `TAPPING_TERM + <offset>`. Adjust **only** that offset (or the expression) to tune this key without changing thumbs and other tap-holds. |
+| **Hold on other key press** (optional) | `Lz7KX/keymap.c` | `get_hold_on_other_key_press()` — when this returns `true` for a mod-tap, another key pressed during the undecided window can favour the **hold** path earlier (helpful for fast capitals, often worse for quick `a` + roll). |
+
+### Which direction to change things
+
+- **Global `TAPPING_TERM` (increase)** — You must hold **longer** before any tap-hold counts as a hold. **Reduces** accidental holds on **all** mod-taps and layer-taps; taps need slightly snappier releases. **Decrease** does the opposite (holds register sooner).
+
+- **`TAPPING_TERM + offset` for `MT(MOD_LSFT, KC_A)` (increase the offset, e.g. `+15` → `+35`)** — Only the **Shift-on-`A`** key waits longer before committing to Shift. Use this when **`a` is dropped or turns into Shift** on fast rolls, without slowing layer thumbs or other home-row mods. **Decrease the offset** if that key feels sluggish when you **intend** Shift.
+
+- **`get_hold_on_other_key_press`** — Returning **`false`** (as in this repo) avoids biasing toward Shift when the next key arrives during the window; return **`true`** for specific keycodes only if you want that “capitalise on roll” behaviour and accept the trade-off for lowercase `a`.
+
+Keep offsets **positive** for the `A` Shift mod-tap unless you know what you are doing: subtracting from `TAPPING_TERM` for that key shortens its tap window and makes false Shift **more** likely.
+
 
 
