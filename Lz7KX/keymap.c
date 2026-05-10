@@ -16,7 +16,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_voyager(
     KC_ESCAPE,      KC_1,           KC_2,           KC_3,           KC_4,           KC_5,                                           KC_6,           KC_7,           KC_8,           KC_9,           KC_0,           KC_MINUS,       
     KC_EQUAL,       KC_Q,           KC_W,           KC_E,           KC_R,           KC_T,                                           KC_Y,           KC_U,           KC_I,           KC_O,           KC_P,           KC_QUOTE,       
-    ALL_T(KC_TAB),  MT(MOD_LSFT, KC_A),MT(MOD_LCTL, KC_S),KC_D,           LT(1, KC_F),    KC_G,                                           KC_H,           KC_J,           KC_K,           MT(MOD_RCTL, KC_L),MT(MOD_RSFT, KC_SCLN),KC_BSPC,        
+    ALL_T(KC_TAB),  KC_A,           MT(MOD_LCTL, KC_S),KC_D,           LT(1, KC_F),    KC_G,                                           KC_H,           KC_J,           KC_K,           MT(MOD_RCTL, KC_L),MT(MOD_RSFT, KC_SCLN),KC_BSPC,        
     KC_NUBS,        MT(MOD_LALT, KC_Z),KC_X,           KC_C,           KC_V,           KC_B,                                           KC_N,           KC_M,           KC_COMMA,       KC_DOT,         MT(MOD_RALT, KC_SLASH),KC_BSLS,        
                                                     KC_LEFT_SHIFT,  KC_LEFT_GUI,                                    KC_ENTER,       LT(2, KC_SPACE)
   ),
@@ -45,28 +45,16 @@ const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM = LAYOUT(
 );
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-    // Home-row Shift on A needs a *longer* window than the global default so
-    // quick rolls (a + next letter) register as tap "a" instead of hold Shift.
-    // Use a positive offset only: TAPPING_TERM - N was making false Shift worse.
+    // Kept in sync with Oryx export; plain KC_A does not use tap-hold, but this
+    // block stays so merges with Oryx do not fight over the same region.
     (void)record;
     switch (keycode) {
-        case MT(MOD_LSFT, KC_A):
-            return TAPPING_TERM + 15;
+        case KC_A:
+            return TAPPING_TERM - 5;
         default:
             return TAPPING_TERM;
     }
 }
-
-bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
-  (void)record;
-
-  // When true for a mod-tap, pressing another key during the tap/hold window
-  // can force the *hold* path early (good for "Igor"-style caps, bad for fast
-  // "a" rolls). If you still drop "a" after the longer get_tapping_term above,
-  // return false here and rely on hold timing alone for capitals.
-  return false;
-}
-
 
 extern rgb_config_t rgb_matrix_config;
 

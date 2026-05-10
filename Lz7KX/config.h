@@ -4,10 +4,6 @@
 
 #define PERMISSIVE_HOLD
 
-// Make HOLD_ON_OTHER_KEY_PRESS configurable per key (see get_hold_on_other_key_press in keymap.c).
-#define HOLD_ON_OTHER_KEY_PRESS
-#define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
-
 #undef RGB_MATRIX_TIMEOUT
 #define RGB_MATRIX_TIMEOUT 180000
 
@@ -15,7 +11,7 @@
 #define RGB_MATRIX_VAL_STEP 1
 
 #define USB_SUSPEND_WAKEUP_DELAY 0
-#define SERIAL_NUMBER "Lz7KX/zLQomJ"
+#define SERIAL_NUMBER "Lz7KX/x9BnJR"
 #define LAYER_STATE_8BIT
 
 #define TAPPING_TERM_PER_KEY

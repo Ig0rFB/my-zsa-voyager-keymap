@@ -58,27 +58,26 @@ The following QMK features are enabled in `rules.mk`:
 - `ORYX_ENABLE = yes` - Enables Oryx integration
 - `RGB_MATRIX_CUSTOM_KB = yes` - Enables custom RGB matrix handling
 
-## Addendum: Tapping term (global vs home-row Shift on `A`)
+## Addendum: Tapping term (global and per-key)
 
-Tap-hold timing is controlled in two places. `#define TAPPING_TERM_PER_KEY` in `Lz7KX/config.h` enables per-key overrides; the actual per-key values are returned from `get_tapping_term()` in `Lz7KX/keymap.c`.
+`#define TAPPING_TERM_PER_KEY` in `Lz7KX/config.h` enables `get_tapping_term()` in `Lz7KX/keymap.c`. The **home row `A` key is plain `KC_A`** (no Shift mod-tap); Oryx’s export still includes a `get_tapping_term` switch so merges stay aligned—tune other mod-taps in that function as needed.
 
 ### Where to edit
 
 | What | File | Notes |
 |------|------|--------|
-| **Global** tapping term (milliseconds) | `Lz7KX/config.h` | `#define TAPPING_TERM …` — also set in Oryx; a successful **Fetch and build layout** workflow overwrites this from the latest export unless you resolve merges manually. |
-| **Shift-on-`A` only** (`MT(MOD_LSFT, KC_A)`) | `Lz7KX/keymap.c` | Inside `get_tapping_term()`, the `case MT(MOD_LSFT, KC_A):` branch returns `TAPPING_TERM + <offset>`. Adjust **only** that offset (or the expression) to tune this key without changing thumbs and other tap-holds. |
-| **Hold on other key press** (optional) | `Lz7KX/keymap.c` | `get_hold_on_other_key_press()` — when this returns `true` for a mod-tap, another key pressed during the undecided window can favour the **hold** path earlier (helpful for fast capitals, often worse for quick `a` + roll). |
+| **Global** tapping term (milliseconds) | `Lz7KX/config.h` | `#define TAPPING_TERM …` — also set in Oryx; the **Fetch and build layout** workflow overwrites this from the latest export when merging. |
+| **Per-key** (mod-taps, layer-taps) | `Lz7KX/keymap.c` | `get_tapping_term()` — add `case` branches for the **full** keycodes (e.g. `MT(MOD_LSFT, KC_A)`, `LT(1, KC_F)`). If you put Shift back on `A` in Oryx, switch the `case` to match that keycode or Git will conflict on the next merge. |
 
-### Which direction to change things
+### If you re-enable Shift on `A` in Oryx
 
-- **Global `TAPPING_TERM` (increase)** — You must hold **longer** before any tap-hold counts as a hold. **Reduces** accidental holds on **all** mod-taps and layer-taps; taps need slightly snappier releases. **Decrease** does the opposite (holds register sooner).
+1. Use `MT(MOD_LSFT, KC_A)` in the keymap and change `get_tapping_term` to use `case MT(MOD_LSFT, KC_A):` (not `KC_A` alone—tap-hold decisions use the mod-tap keycode).
+2. Optionally re-add `#define HOLD_ON_OTHER_KEY_PRESS` and `#define HOLD_ON_OTHER_KEY_PRESS_PER_KEY` in `config.h` and implement `get_hold_on_other_key_press()` in `keymap.c` if you want per-key “hold on other key press” behaviour.
 
-- **`TAPPING_TERM + offset` for `MT(MOD_LSFT, KC_A)` (increase the offset, e.g. `+15` → `+35`)** — Only the **Shift-on-`A`** key waits longer before committing to Shift. Use this when **`a` is dropped or turns into Shift** on fast rolls, without slowing layer thumbs or other home-row mods. **Decrease the offset** if that key feels sluggish when you **intend** Shift.
+### Direction (global)
 
-- **`get_hold_on_other_key_press`** — Returning **`false`** (as in this repo) avoids biasing toward Shift when the next key arrives during the window; return **`true`** for specific keycodes only if you want that “capitalise on roll” behaviour and accept the trade-off for lowercase `a`.
-
-Keep offsets **positive** for the `A` Shift mod-tap unless you know what you are doing: subtracting from `TAPPING_TERM` for that key shortens its tap window and makes false Shift **more** likely.
+- **Increase `TAPPING_TERM`** — Holds need a longer press; fewer accidental holds on mod-taps / layer-taps.
+- **Decrease** — Holds register sooner; snappier tap-hold typing but more accidental holds.
 
 
 
