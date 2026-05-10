@@ -106,6 +106,14 @@ jobs:
       - name: Build qmk docker image
         run: docker build -t qmk .
 
+      - name: Verify combo definitions when combos enabled
+        run: |
+          ID="${{ github.event.inputs.layout_id }}"
+          if grep -q '^COMBO_ENABLE = yes' "$ID/rules.mk"; then
+            grep -q '\bkey_combos\b' "$ID/keymap.c" || { echo "::error::keymap.c must define key_combos[] when COMBO_ENABLE=yes (Oryx export drops them; re-apply after merge—see README)."; exit 1; }
+            grep -q 'COMBO_COUNT' "$ID/config.h" || { echo "::error::config.h must define COMBO_COUNT when combos are enabled."; exit 1; }
+          fi
+
       - name: Build the layout
         id: build-layout
         run: |

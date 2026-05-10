@@ -48,6 +48,8 @@ This section documents all custom QMK features and modifications applied to this
 
 ### Combos
 
+Oryx exports **do not** include combo tables; merges can remove them from `keymap.c` even though `COMBO_ENABLE` stays on in `rules.mk`. You must keep **`#define COMBO_COUNT`** in `config.h` and the **`combo0` / `combo1` / `combo2` arrays plus `key_combos[]`** in `keymap.c` (QMK introspection requires `key_combos` in this file—the same rule as `key_overrides`). The workflow fails fast if those are missing when combos are enabled.
+
 - **Combo 0**: Pressing `KC_4`, `KC_5`, `KC_6`, `KC_7` simultaneously triggers `LGUI(LCTL(KC_Q))` (Mac: Cmd+Ctrl+Q).
 - **Combo 1**: Pressing `KC_I`, `KC_O` simultaneously triggers `KC_LBRC` (left bracket `[`).
 - **Combo 2**: Pressing `KC_O`, `KC_P` simultaneously triggers `KC_RBRC` (right bracket `]`).

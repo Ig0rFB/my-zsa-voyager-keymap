@@ -44,6 +44,17 @@ const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM = LAYOUT(
   '*', '*', '*', '*'
 );
 
+const uint16_t PROGMEM combo0[] = { KC_4, KC_5, KC_6, KC_7, COMBO_END};
+const uint16_t PROGMEM combo1[] = { KC_I, KC_O, COMBO_END};
+const uint16_t PROGMEM combo2[] = { KC_O, KC_P, COMBO_END};
+
+// Combos must stay in this file: QMK keymap_introspection expects key_combos
+// in the keymap translation unit (same idea as key_overrides).
+combo_t key_combos[COMBO_COUNT] = {
+    COMBO(combo0, LGUI(LCTL(KC_Q))),
+    COMBO(combo1, KC_LBRC),
+    COMBO(combo2, KC_RBRC),
+};
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     // Home-row Shift on A needs a *longer* window than the global default so
