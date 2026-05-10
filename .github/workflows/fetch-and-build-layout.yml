@@ -61,13 +61,13 @@ jobs:
           unzip -oj source.zip '*_source/*' -d ${{ github.event.inputs.layout_id }}
           rm source.zip
 
-      # Oryx source zips often omit COMBO_ENABLE and KEY_OVERRIDE_ENABLE; without
-      # these, rules.mk on the oryx branch drifts from main and every merge fails.
-      - name: Augment rules.mk with combo and key-override flags
+      # Oryx zips omit COMBO_ENABLE and KEY_OVERRIDE_ENABLE; append defaults so
+      # rules.mk matches main (combos off unless you edit main / Oryx explicitly).
+      - name: Augment rules.mk with combo and key-override defaults
         run: |
           RK="${{ github.event.inputs.layout_id }}/rules.mk"
           if ! grep -q '^COMBO_ENABLE' "$RK"; then
-            echo 'COMBO_ENABLE = yes' >> "$RK"
+            echo 'COMBO_ENABLE = no' >> "$RK"
           fi
           if ! grep -q '^KEY_OVERRIDE_ENABLE' "$RK"; then
             printf '\n# Key overrides are defined in keymap.c (required for QMK introspection).\nKEY_OVERRIDE_ENABLE = yes\n' >> "$RK"
@@ -105,14 +105,6 @@ jobs:
 
       - name: Build qmk docker image
         run: docker build -t qmk .
-
-      - name: Verify combo definitions when combos enabled
-        run: |
-          ID="${{ github.event.inputs.layout_id }}"
-          if grep -q '^COMBO_ENABLE = yes' "$ID/rules.mk"; then
-            grep -q '\bkey_combos\b' "$ID/keymap.c" || { echo "::error::keymap.c must define key_combos[] when COMBO_ENABLE=yes (Oryx export drops them; re-apply after merge—see README)."; exit 1; }
-            grep -q 'COMBO_COUNT' "$ID/config.h" || { echo "::error::config.h must define COMBO_COUNT when combos are enabled."; exit 1; }
-          fi
 
       - name: Build the layout
         id: build-layout

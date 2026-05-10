@@ -48,16 +48,12 @@ This section documents all custom QMK features and modifications applied to this
 
 ### Combos
 
-Oryx exports **do not** include combo tables; merges can remove them from `keymap.c` even though `COMBO_ENABLE` stays on in `rules.mk`. You must keep **`#define COMBO_COUNT`** in `config.h` and the **`combo0` / `combo1` / `combo2` arrays plus `key_combos[]`** in `keymap.c` (QMK introspection requires `key_combos` in this file—the same rule as `key_overrides`). The workflow fails fast if those are missing when combos are enabled.
-
-- **Combo 0**: Pressing `KC_4`, `KC_5`, `KC_6`, `KC_7` simultaneously triggers `LGUI(LCTL(KC_Q))` (Mac: Cmd+Ctrl+Q).
-- **Combo 1**: Pressing `KC_I`, `KC_O` simultaneously triggers `KC_LBRC` (left bracket `[`).
-- **Combo 2**: Pressing `KC_O`, `KC_P` simultaneously triggers `KC_RBRC` (right bracket `]`).
+**Disabled.** Combos are off in `rules.mk` (`COMBO_ENABLE = no`) to match the layout in Oryx (no chorded keys). Brackets live on layer 1 via normal keys. If you enable combos again in Oryx or in `rules.mk`, you must add **`#define COMBO_COUNT`** in `config.h` and **`key_combos[]`** (plus combo arrays) in **`keymap.c`**, or QMK’s `keymap_introspection` will fail to build—those symbols must stay in `keymap.c`, not a separate file.
 
 ### Enabled Features
 
 The following QMK features are enabled in `rules.mk`:
-- `COMBO_ENABLE = yes` - Enables key combo functionality
+- `COMBO_ENABLE = no` — Combos disabled (aligns with Oryx)
 - `KEY_OVERRIDE_ENABLE = yes` - Enables key override functionality
 - `ORYX_ENABLE = yes` - Enables Oryx integration
 - `RGB_MATRIX_CUSTOM_KB = yes` - Enables custom RGB matrix handling
