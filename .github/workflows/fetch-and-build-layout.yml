@@ -61,6 +61,18 @@ jobs:
           unzip -oj source.zip '*_source/*' -d ${{ github.event.inputs.layout_id }}
           rm source.zip
 
+      # Oryx source zips often omit COMBO_ENABLE and KEY_OVERRIDE_ENABLE; without
+      # these, rules.mk on the oryx branch drifts from main and every merge fails.
+      - name: Augment rules.mk with combo and key-override flags
+        run: |
+          RK="${{ github.event.inputs.layout_id }}/rules.mk"
+          if ! grep -q '^COMBO_ENABLE' "$RK"; then
+            echo 'COMBO_ENABLE = yes' >> "$RK"
+          fi
+          if ! grep -q '^KEY_OVERRIDE_ENABLE' "$RK"; then
+            printf '\n# Key overrides are defined in keymap.c (required for QMK introspection).\nKEY_OVERRIDE_ENABLE = yes\n' >> "$RK"
+          fi
+
       - name: Commit and Push changes
         env:
           CHANGE_DESCRIPTION: ${{ steps.download-layout-source.outputs.change_description }}
