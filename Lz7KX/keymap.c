@@ -34,6 +34,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, LCTL(LSFT(KC_TAB)),LCTL(KC_TAB),   KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
                                                     KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT
   ),
+  [3] = LAYOUT_voyager(
+    KC_NO,          KC_1,           KC_2,           KC_3,           KC_4,           KC_5,                                           KC_6,           KC_7,           KC_8,           KC_9,           KC_0,           KC_NO,          
+    KC_TAB,         KC_Q,           KC_W,           KC_E,           KC_R,           KC_T,                                           KC_Y,           KC_U,           KC_I,           KC_O,           KC_NO,          KC_NO,          
+    KC_LEFT_SHIFT,  KC_A,           KC_S,           KC_D,           KC_F,           KC_G,                                           KC_H,           KC_J,           KC_K,           KC_L,           KC_NO,          KC_NO,          
+    KC_NO,          KC_Z,           KC_X,           KC_C,           KC_V,           KC_B,                                           KC_N,           KC_M,           KC_COMMA,       KC_DOT,         KC_NO,          KC_NO,          
+                                                    KC_SPACE,       KC_LEFT_GUI,                                    KC_ENTER,       KC_SPACE
+  ),
 };
 
 const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM = LAYOUT(
@@ -44,13 +51,16 @@ const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM = LAYOUT(
   '*', '*', '*', '*'
 );
 
+const uint16_t PROGMEM combo0[] = { KC_5, KC_6, COMBO_END};
+
+combo_t key_combos[COMBO_COUNT] = {
+    COMBO(combo0, TG(3)),
+};
+
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-    // Per-key term must use the same keycodes as the keymap (mod-taps use
-    // MT(...), not KC_A). Match Oryx’s get_tapping_term region to reduce merges.
-    (void)record;
     switch (keycode) {
         case MT(MOD_LALT, KC_A):
-            return TAPPING_TERM - 5;
+            return TAPPING_TERM -5;
         default:
             return TAPPING_TERM;
     }
@@ -74,6 +84,8 @@ const uint8_t PROGMEM ledmap[][RGB_MATRIX_LED_COUNT][3] = {
     [1] = { {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93}, {83,255,93} },
 
     [2] = { {51,218,204}, {51,218,204}, {51,218,204}, {51,218,204}, {51,218,204}, {51,218,204}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,255,255}, {93,255,255}, {172,255,255}, {0,0,0}, {0,0,0}, {51,218,204}, {51,218,204}, {51,218,204}, {51,218,204}, {51,218,204}, {0,0,0}, {82,253,190}, {207,255,255}, {165,221,192}, {207,255,255}, {0,0,0}, {0,0,0}, {0,0,0}, {165,221,192}, {165,221,192}, {165,221,192}, {0,0,0}, {0,0,0}, {0,0,0}, {14,218,204}, {14,218,204}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0} },
+
+    [3] = { {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {172,255,255}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {172,255,255}, {172,255,255}, {172,255,255}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {172,255,255}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0} },
 
 };
 
@@ -107,6 +119,9 @@ bool rgb_matrix_indicators_user(void) {
         break;
       case 2:
         set_layer_color(2);
+        break;
+      case 3:
+        set_layer_color(3);
         break;
      default:
         if (rgb_matrix_get_flags() == LED_FLAG_NONE) {
